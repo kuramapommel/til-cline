@@ -7,3 +7,5 @@
 2. API Provider で `VS Code LM API` を選択する
 3. Language Model に好みのモデルを選択する
    - [現在, `claude-3.7-sonnet` には対応していないらしい](https://zenn.dev/tomo0108/articles/49eace107e4425)
+4. auto-approve を設定する
+   - 「読み取り専用操作を常に承認」をオンにする
