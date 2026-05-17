@@ -1,0 +1,47 @@
+name: Feature
+description: 機能実装・改善タスク
+labels: ["feature"]
+body:
+  - type: textarea
+    id: context
+    attributes:
+      label: 背景 / Context
+      description: なぜこのタスクが必要か。現状の課題や背景を記述してください。
+    validations:
+      required: true
+
+  - type: textarea
+    id: goal
+    attributes:
+      label: ゴール / Goal
+      description: 実装方法ではなく、達成したい状態を記述してください。
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance_criteria
+    attributes:
+      label: 受け入れ基準 / Acceptance Criteria
+      description: このタスクが完了したと判断するための基準を列挙してください。
+      value: |
+        - [ ]
+        - [ ]
+        - [ ]
+    validations:
+      required: true
+
+  - type: textarea
+    id: implementation_hints
+    attributes:
+      label: 実装ヒント / Implementation Hints
+      description: 変更すべきファイル、参考実装、既知の制約など（任意）。
+    validations:
+      required: false
+
+  - type: textarea
+    id: out_of_scope
+    attributes:
+      label: スコープ外 / Out of Scope
+      description: このタスクでやらないこと・変更してはいけないものを明示してください。
+    validations:
+      required: true
