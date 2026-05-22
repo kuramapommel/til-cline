@@ -3,6 +3,10 @@
     "miro": {
       "type": "http",
       "url": "https://mcp.miro.com"
+    },
+    "notionApi": {
+      "type": "http",
+      "url": "https://mcp.notion.com/mcp"
     }
   }
 }
