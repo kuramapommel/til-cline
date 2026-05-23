@@ -1,0 +1,5 @@
+# プロジェクト共通の設定
+
+[notion]
+# バックログ管理用データベースのURL
+backlog_db_url = "https://www.notion.so/..."
