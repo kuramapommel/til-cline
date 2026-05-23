@@ -1,0 +1,39 @@
+# Issue 作成時に Notion バックログの「関連 Issue」プロパティへ Issue URL を書き戻すワークフロー。
+#
+# 事前準備:
+#   1. Notion の Settings > Connections > Develop or manage integrations でインテグレーションを作成する
+#   2. 発行された "Internal Integration Secret" をコピーする
+#   3. GitHub リポジトリの Settings > Secrets and variables > Actions > New repository secret で
+#      名前: NOTION_API_TOKEN、値: 手順2のトークン を登録する
+#   4. Notion のバックログデータベースを開き、右上の「...」→「Add connections」から手順1のインテグレーションを接続する
+
+name: Issue Lifecycle
+
+on:
+  issues:
+    types: [opened]
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Parse issue body
+        id: parse
+        uses: stefanbuck/github-issue-parser@v3
+        with:
+          template-path: .github/ISSUE_TEMPLATE/feature.yml
+
+      - name: Debug parser output
+        run: |
+          echo "=== JSON 出力 ==="
+          cat ${HOME}/issue-parser-result.json
+
+      - name: Sync to Notion
+        env:
+          NOTION_API_TOKEN: ${{ secrets.NOTION_API_TOKEN }}
+          BACKLOG_URL: ${{ steps.parse.outputs.issueparser_backlog }}
+          ISSUE_URL: ${{ github.event.issue.html_url }}
+        run: bash .github/scripts/sync-issue-to-backlog.sh
