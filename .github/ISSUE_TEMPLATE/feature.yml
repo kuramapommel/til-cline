@@ -45,3 +45,11 @@ body:
       description: このタスクでやらないこと・変更してはいけないものを明示してください。
     validations:
       required: true
+
+  - type: textarea
+    id: backlog
+    attributes:
+      label: バックログ / Backlog
+      description: 対応するバックログ項目の Notion URL（任意）
+    validations:
+      required: false
