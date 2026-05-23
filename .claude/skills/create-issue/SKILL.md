@@ -88,27 +88,27 @@ gh issue create \
   --title "<タイトル>" \
   --label "feature" \
   --body "$(cat <<'EOF'
-## 背景 / Context
+### 背景 / Context
 
 <context の内容>
 
-## ゴール / Goal
+### ゴール / Goal
 
 <goal の内容>
 
-## 受け入れ基準 / Acceptance Criteria
+### 受け入れ基準 / Acceptance Criteria
 
 <acceptance_criteria の内容（チェックボックス形式）>
 
-## 実装ヒント / Implementation Hints
+### 実装ヒント / Implementation Hints
 
 <implementation_hints の内容>
 
-## スコープ外 / Out of Scope
+### スコープ外 / Out of Scope
 
 <out_of_scope の内容>
 
-## バックログ / Backlog
+### バックログ / Backlog
 
 <バックログの Notion URL。バックログ ID もバックログ URL もない場合は空欄のまま>
 EOF
