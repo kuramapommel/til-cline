@@ -1,0 +1,58 @@
+{
+  "persona_name": "tanaka-shota",
+  "product_summary": "開発チーム間のコミュニケーション摩擦の解消／管理職の負担軽減を目的としたプロダクト。チームメンバーがチャット等の非同期コラボに偏りがちな現状を、モブワークなどの同期的コミュニケーションの有効性に気づかせることをねらう。",
+  "primary_persona_target": "team-member-developer",
+  "understanding_level": "B",
+  "current_step": "deepdive",
+  "current_aspect": "motivation",
+  "current_question_count": 0,
+  "answered_aspects": ["rough-overview", "who", "context"],
+  "rough_overview_answers": {
+    "Q1_layer": "B. ミドル（4〜8 年目）",
+    "Q2_org": "B. 中規模のプロダクト企業（10〜50 人）",
+    "Q3_workstyle": "B. ハイブリッド",
+    "Q4_action_when_stuck": "B. MTG をセットして調整する",
+    "Q5_good_day": "A. 自分の作業に集中して、まとまったコードが書けた日",
+    "Q6_stress": "C. 他チームの事情が分からず、判断に時間がかかる",
+    "Q7_ideal": "A. 自分のペースで集中して、やりたい技術にどっぷり浸かれる"
+  },
+  "who_answers": {
+    "Q1_name_age_gender": "田中 翔太・男性・28 歳",
+    "Q2_family": "独身・ひとり暮らし",
+    "Q3_personality": "中間型（場面で切り替え／長い雑談は苦手）",
+    "Q4_tech_domain": "フロントエンド／UI 中心（デザイナー・PM との連携多）",
+    "Q5_position": "一メンバー",
+    "Q6_career_view": "ライフスタイル志向（仕事はそこそこに、生活の充実を優先）",
+    "Q7_off_time": "インドア（ゲーム・読書・映画）。一人時間を大事にする"
+  },
+  "context_answers": {
+    "Q1_rhythm": "MTG が一日に分散／合間でコード（細切れ）",
+    "Q2_cross_team_freq": "ほぼ毎日（週 5+）",
+    "Q3_mob_pair_experience": "経験あり、ピンと来なかった（時間の浪費に感じた）",
+    "Q4_dev_method": "スクラム運用",
+    "Q5_action_when_stuck_actual": "Slack に投げて返事待ち（半日〜1 日）",
+    "Q6_meetings_quality": "朝会／定例はあるが深い議論にならず、本当の課題は見えにくい",
+    "Q7_lack_of_other_team_info": "プロジェクト全体の進捗が見えず、自分のタスクの優先度判断ができない"
+  },
+  "tradeoffs_pending": [
+    {
+      "id": "T1",
+      "a_label": "Slack に投げて返事を待つ（非同期デフォルト）",
+      "b_label": "MTG をセットして調整する（同期切り替え）",
+      "context": "ざっくり Q4 と コンテキスト Q5 で答えが分岐。翔太さんの『本来の動き』はどちらに近いかを 6 段階で確認する。",
+      "scheduled_check_after": "all-aspects"
+    }
+  ],
+  "tradeoffs": [],
+  "open_questions": [
+    "過去のモブ経験『ピンと来ず』 vs プロダクトねらい『同期コラボの有効性に気づかせる』。プロダクトは『前のモブとは違う体験』を訴求する必要がある。検証ポイント最有力。",
+    "願望『集中して書けた日が良い』 vs 現実『MTG 分散で細切れ』 → これは矛盾ではなく、断片的な情報追跡コストが集中を奪っている構造の根拠。プロダクトのフックとして強い。",
+    "業務時間内の『技術にどっぷり』vs ライフスタイル志向『仕事はそこそこ』のトレードオフ。観点が一通り埋まった段階で 6 段階で確認。"
+  ],
+  "questionnaire_files": [
+    "questions/001-rough-overview.md",
+    "questions/002-who-deepdive.md",
+    "questions/003-context-deepdive.md",
+    "questions/004-motivation-deepdive.md"
+  ]
+}
