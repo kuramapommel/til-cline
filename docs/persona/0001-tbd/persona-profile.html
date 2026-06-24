@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ペルソナプロフィール — 田中 翔太（仮）</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', 'Yu Gothic', sans-serif;
+  background: #eeebe5;
+  color: #2d3748;
+  line-height: 1.8;
+  font-size: 15px;
+}
+
+:root {
+  --navy: #1a2f50;
+  --navy-light: #2c4a6e;
+  --teal: #2c7a6e;
+  --teal-light: #e8f4f2;
+  --amber: #c98a2c;
+  --amber-light: #fdf0e8;
+  --bg: #eeebe5;
+  --bg-light: #f8f6f2;
+  --text: #2d3748;
+  --text-muted: #718096;
+  --border: #d0cbc2;
+}
+
+/* ========== HERO ========== */
+.hero {
+  background: linear-gradient(140deg, #111e35 0%, #1a2f50 50%, #1f4a42 100%);
+  color: white;
+  padding: 72px 24px 64px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -80px; right: -80px;
+  width: 320px; height: 320px;
+  border-radius: 50%;
+  background: rgba(44, 122, 110, 0.12);
+  pointer-events: none;
+}
+
+.hero::after {
+  content: '';
+  position: absolute;
+  bottom: -60px; left: -60px;
+  width: 240px; height: 240px;
+  border-radius: 50%;
+  background: rgba(201, 138, 44, 0.08);
+  pointer-events: none;
+}
+
+.hero-inner {
+  max-width: 680px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
+.hypothesis-badge {
+  display: inline-block;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.25);
+  color: #a8c8d8;
+  font-size: 0.72rem;
+  padding: 5px 14px;
+  border-radius: 100px;
+  margin-bottom: 32px;
+  letter-spacing: 0.1em;
+}
+
+.avatar {
+  display: block;
+  margin: 0 auto 28px;
+}
+
+.hero-name {
+  font-size: 2.6rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: #ffffff;
+  margin-bottom: 6px;
+}
+
+.hero-furigana {
+  font-size: 0.85rem;
+  letter-spacing: 0.18em;
+  color: #80a8c0;
+  margin-bottom: 28px;
+}
+
+.hero-divider {
+  width: 48px;
+  height: 2px;
+  background: var(--amber);
+  margin: 0 auto 24px;
+  border-radius: 2px;
+}
+
+.hero-catchcopy {
+  font-size: 1.1rem;
+  color: #d4e8f0;
+  line-height: 1.9;
+}
+
+.hero-catchcopy .sub {
+  display: block;
+  font-size: 0.82rem;
+  color: #7898b0;
+  margin-top: 10px;
+  letter-spacing: 0.05em;
+}
+
+/* ========== LAYOUT ========== */
+.content {
+  max-width: 840px;
+  margin: 0 auto;
+  padding: 0 24px 60px;
+}
+
+.section {
+  padding: 56px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.section:last-child { border-bottom: none; }
+
+.section-meta {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  margin-bottom: 28px;
+  padding-bottom: 14px;
+  border-bottom: 2px solid var(--navy);
+}
+
+.section-en {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--navy);
+  letter-spacing: 0.03em;
+}
+
+.section-ja {
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  color: var(--teal);
+}
+
+/* ========== PROFILE TABLE ========== */
+.profile-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.profile-table tr {
+  border-bottom: 1px solid var(--border);
+}
+
+.profile-table tr:last-child { border-bottom: none; }
+
+.profile-table th {
+  width: 150px;
+  padding: 13px 16px 13px 0;
+  text-align: left;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  letter-spacing: 0.08em;
+  vertical-align: top;
+  white-space: nowrap;
+}
+
+.profile-table td {
+  padding: 13px 0;
+  font-size: 0.94rem;
+  color: var(--text);
+  vertical-align: top;
+}
+
+/* ========== STORY ========== */
+.story-text {
+  font-size: 0.98rem;
+  line-height: 2.1;
+  color: #3a4a5c;
+}
+
+.story-text p { margin-bottom: 1.5em; }
+.story-text p:last-child { margin-bottom: 0; }
+
+/* ========== DIAGRAM ========== */
+.diagram-container {
+  background: var(--bg-light);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 36px 28px 28px;
+  margin-top: 8px;
+}
+
+.diagram-caption {
+  text-align: center;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin-top: 16px;
+  letter-spacing: 0.04em;
+}
+
+/* ========== CONFIDENCE ========== */
+.confidence-card {
+  background: var(--navy);
+  border-radius: 16px;
+  padding: 32px 36px;
+  margin-bottom: 36px;
+  position: relative;
+  overflow: hidden;
+}
+
+.confidence-card::before {
+  content: '';
+  position: absolute;
+  top: -40px; right: -40px;
+  width: 180px; height: 180px;
+  border-radius: 50%;
+  background: rgba(44,122,110,0.15);
+  pointer-events: none;
+}
+
+.confidence-stars {
+  font-size: 2rem;
+  letter-spacing: 0.08em;
+  color: var(--amber);
+  margin-bottom: 12px;
+}
+
+.confidence-label {
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  color: #6a9ab0;
+  margin-bottom: 12px;
+}
+
+.confidence-note {
+  font-size: 0.88rem;
+  color: #a0bcd0;
+  line-height: 1.75;
+  position: relative;
+  z-index: 1;
+}
+
+/* ========== VERIFICATION ========== */
+.verification-list {
+  list-style: none;
+  counter-reset: v-counter;
+}
+
+.verification-list li {
+  counter-increment: v-counter;
+  padding: 18px 0 18px 56px;
+  position: relative;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.92rem;
+  line-height: 1.75;
+}
+
+.verification-list li:last-child { border-bottom: none; }
+
+.verification-list li::before {
+  content: counter(v-counter, decimal-leading-zero);
+  position: absolute;
+  left: 0;
+  top: 18px;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--teal);
+}
+
+.verification-list li strong {
+  display: block;
+  font-weight: 700;
+  color: var(--navy);
+  margin-bottom: 4px;
+  font-size: 0.95rem;
+}
+
+/* ========== FOOTER ========== */
+.footer {
+  text-align: center;
+  padding: 40px 24px;
+  font-size: 0.72rem;
+  color: #9a9080;
+  letter-spacing: 0.06em;
+  line-height: 2;
+}
+</style>
+</head>
+<body>
+
+<!-- ===== HERO ===== -->
+<header class="hero">
+  <div class="hero-inner">
+
+    <div class="hypothesis-badge">ペルソナ仮説 &nbsp;/&nbsp; Persona Hypothesis</div>
+
+    <!-- Avatar SVG -->
+    <svg class="avatar" width="128" height="128" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="田中翔太のアバターイラスト">
+      <!-- outer ring -->
+      <circle cx="64" cy="64" r="62" fill="#243858" stroke="rgba(255,255,255,0.15)" stroke-width="2"/>
+      <!-- shoulder / shirt -->
+      <path d="M28 128 Q32 96 40 90 L52 80 L64 88 L76 80 L88 90 Q96 96 100 128Z" fill="#1a2f50"/>
+      <!-- collar highlight -->
+      <path d="M52 80 L64 95 L76 80" stroke="rgba(255,255,255,0.18)" stroke-width="1.5" fill="none" stroke-linejoin="round"/>
+      <!-- neck -->
+      <rect x="57" y="73" width="14" height="14" rx="3" fill="#d4a97a"/>
+      <!-- head -->
+      <ellipse cx="64" cy="57" rx="23" ry="25" fill="#d4a97a"/>
+      <!-- left ear -->
+      <ellipse cx="41" cy="57" rx="4" ry="5" fill="#d4a97a"/>
+      <!-- right ear -->
+      <ellipse cx="87" cy="57" rx="4" ry="5" fill="#d4a97a"/>
+      <!-- hair top -->
+      <ellipse cx="64" cy="35" rx="23" ry="10" fill="#2a1e14"/>
+      <rect x="41" y="35" width="46" height="12" fill="#2a1e14"/>
+      <!-- hair side left -->
+      <rect x="41" y="40" width="6" height="16" rx="2" fill="#2a1e14"/>
+      <!-- hair side right -->
+      <rect x="81" y="40" width="6" height="16" rx="2" fill="#2a1e14"/>
+      <!-- glasses left -->
+      <rect x="46" y="51" width="14" height="11" rx="3.5" fill="none" stroke="#3a3a5c" stroke-width="2.2"/>
+      <!-- glasses right -->
+      <rect x="68" y="51" width="14" height="11" rx="3.5" fill="none" stroke="#3a3a5c" stroke-width="2.2"/>
+      <!-- glasses bridge -->
+      <line x1="60" y1="56.5" x2="68" y2="56.5" stroke="#3a3a5c" stroke-width="2"/>
+      <!-- glasses arms -->
+      <line x1="46" y1="56.5" x2="41" y2="56.5" stroke="#3a3a5c" stroke-width="1.5"/>
+      <line x1="82" y1="56.5" x2="87" y2="56.5" stroke="#3a3a5c" stroke-width="1.5"/>
+      <!-- eyes -->
+      <circle cx="53" cy="57" r="2.8" fill="#2a1e14"/>
+      <circle cx="75" cy="57" r="2.8" fill="#2a1e14"/>
+      <!-- eye shine -->
+      <circle cx="54.5" cy="55.8" r="0.9" fill="rgba(255,255,255,0.7)"/>
+      <circle cx="76.5" cy="55.8" r="0.9" fill="rgba(255,255,255,0.7)"/>
+      <!-- neutral-slight-smile mouth -->
+      <path d="M56 70 Q64 74.5 72 70" stroke="#b07850" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+    </svg>
+
+    <div class="hero-name">田中 翔太</div>
+    <div class="hero-furigana">Tanaka Shōta &ensp;（仮名）</div>
+    <div class="hero-divider"></div>
+    <div class="hero-catchcopy">
+      「邪魔されずに、今日もひとつきれいに終わらせたい」
+      <span class="sub">― 自律性と完遂感のなかに、静かな誇りを持つエンジニア ―</span>
+    </div>
+
+  </div>
+</header>
+
+<!-- ===== MAIN ===== -->
+<main class="content">
+
+  <!-- Profile -->
+  <section class="section">
+    <div class="section-meta">
+      <span class="section-en">Profile</span>
+      <span class="section-ja">基本プロフィール</span>
+    </div>
+    <table class="profile-table">
+      <tr><th>氏名（仮）</th><td>田中 翔太</td></tr>
+      <tr><th>年齢</th><td>28 歳</td></tr>
+      <tr><th>性別</th><td>男性</td></tr>
+      <tr><th>居住地</th><td>都市部、一人暮らし</td></tr>
+      <tr><th>職業</th><td>フロントエンドエンジニア（ミドル / 4〜8 年目）</td></tr>
+      <tr><th>勤務先</th><td>中規模プロダクト企業（10〜50 名）</td></tr>
+      <tr><th>就業形態</th><td>ハイブリッド（出社 + リモート併用）</td></tr>
+      <tr><th>家族構成</th><td>独身、ひとり暮らし</td></tr>
+      <tr><th>趣味</th><td>ゲーム、映画鑑賞、読書（インドア中心）</td></tr>
+      <tr><th>キャリア観</th><td>ライフスタイル志向。仕事は丁寧にこなしながらも、生活の充実を大切にする</td></tr>
+      <tr><th>性格</th><td>内向寄りの中間型。場面で切り替えるが、長い雑談・大人数の場は苦手</td></tr>
+    </table>
+  </section>
+
+  <!-- Story -->
+  <section class="section">
+    <div class="section-meta">
+      <span class="section-en">Story</span>
+      <span class="section-ja">経歴・日常</span>
+    </div>
+    <div class="story-text">
+      <p>翔太さんは UI 実装を中心に活躍するフロントエンドエンジニアだと想定される。デザイナーや PM との連携が多い職種柄、仕様の解釈や確認のやり取りが日常的に発生している。スクラムを採用しているチームに所属しており、朝会や定例が一日に点在していると考えられる。</p>
+      <p>典型的な一日は、MTG とコーディングが交互に混じり合う「細切れリズム」になりがちだと想定される。ブロックが発生すると Slack にメッセージを投げて返事を待つことが多く、その間も「来たかな」という気になりが頭の片隅に残り、完全に別の作業へ切り替えられない状態が続く可能性がある。</p>
+      <p>プライベートでは、ゲーム・映画・読書と、ひとりで深く没入できるものを楽しんでいる。仕事でも同様に「誰にも邪魔されず、ひとつのことに集中できる状態」を理想としており、「今日も PR をきれいにマージできた」という完遂感が、一日の達成感の核になっているのかもしれない。定時に仕事を終えて夜は自分の時間を確保することが、翔太さんにとっての大切なリズムだと考えられる。</p>
+      <p>今のチームや組織の将来については漠然とした不安を抱えている可能性がある。「なぜここで働いているのか」という問いに対して、自分なりの答えをまだ言語化できていないのかもしれない。チームのコミュニケーション構造に問題があると認識しつつも、自分一人では動けないという感覚も持っていると考えられる。</p>
+    </div>
+  </section>
+
+  <!-- Needs Diagram -->
+  <section class="section">
+    <div class="section-meta">
+      <span class="section-en">Needs &amp; Challenges</span>
+      <span class="section-ja">ニーズ・課題の構造</span>
+    </div>
+    <div class="diagram-container">
+      <svg width="100%" viewBox="0 0 740 300" xmlns="http://www.w3.org/2000/svg" style="max-width:740px;display:block;margin:0 auto;overflow:visible;">
+        <defs>
+          <marker id="arr-teal" markerWidth="9" markerHeight="9" refX="7" refY="3.5" orient="auto">
+            <path d="M0,0.5 L0,6.5 L8,3.5 z" fill="#2c7a6e"/>
+          </marker>
+          <marker id="arr-amber" markerWidth="9" markerHeight="9" refX="7" refY="3.5" orient="auto">
+            <path d="M0,0.5 L0,6.5 L8,3.5 z" fill="#c98a2c"/>
+          </marker>
+        </defs>
+
+        <!-- MOTIVATION -->
+        <rect x="8" y="28" width="200" height="240" rx="14" fill="#e8f4f2" stroke="#2c7a6e" stroke-width="1.5"/>
+        <rect x="8" y="28" width="200" height="40" rx="14" fill="#2c7a6e"/>
+        <rect x="8" y="55" width="200" height="13" fill="#2c7a6e"/>
+        <text x="108" y="52" text-anchor="middle" fill="white" font-size="13" font-weight="700" font-family="sans-serif">モチベーション</text>
+
+        <text x="108" y="92" text-anchor="middle" fill="#1a4a42" font-size="12" font-family="sans-serif" font-weight="600">完遂感</text>
+        <text x="108" y="109" text-anchor="middle" fill="#2a6058" font-size="10.5" font-family="sans-serif">PR がきれいに終わる</text>
+        <line x1="28" y1="120" x2="188" y2="120" stroke="#2c7a6e" stroke-width="0.5" stroke-dasharray="4,3"/>
+
+        <text x="108" y="140" text-anchor="middle" fill="#1a4a42" font-size="12" font-family="sans-serif" font-weight="600">自律性</text>
+        <text x="108" y="157" text-anchor="middle" fill="#2a6058" font-size="10.5" font-family="sans-serif">邪魔されず自分のペースで</text>
+        <line x1="28" y1="168" x2="188" y2="168" stroke="#2c7a6e" stroke-width="0.5" stroke-dasharray="4,3"/>
+
+        <text x="108" y="188" text-anchor="middle" fill="#1a4a42" font-size="12" font-family="sans-serif" font-weight="600">貢献の感謝</text>
+        <text x="108" y="205" text-anchor="middle" fill="#2a6058" font-size="10.5" font-family="sans-serif">同僚からの直接の感謝</text>
+        <line x1="28" y1="216" x2="188" y2="216" stroke="#2c7a6e" stroke-width="0.5" stroke-dasharray="4,3"/>
+
+        <text x="108" y="236" text-anchor="middle" fill="#1a4a42" font-size="12" font-family="sans-serif" font-weight="600">オフの完全な充実</text>
+        <text x="108" y="253" text-anchor="middle" fill="#2a6058" font-size="10.5" font-family="sans-serif">夜は趣味に集中できる</text>
+
+        <!-- BARRIER -->
+        <rect x="270" y="28" width="200" height="240" rx="14" fill="#fdf0e8" stroke="#c98a2c" stroke-width="2"/>
+        <rect x="270" y="28" width="200" height="40" rx="14" fill="#c98a2c"/>
+        <rect x="270" y="55" width="200" height="13" fill="#c98a2c"/>
+        <text x="370" y="52" text-anchor="middle" fill="white" font-size="13" font-weight="700" font-family="sans-serif">障害</text>
+
+        <text x="370" y="92" text-anchor="middle" fill="#6b3a10" font-size="12" font-family="sans-serif" font-weight="600">Slack 割り込み（受信）</text>
+        <text x="370" y="109" text-anchor="middle" fill="#8a5020" font-size="10.5" font-family="sans-serif">集中を断ち切る最大の原因</text>
+        <line x1="290" y1="120" x2="450" y2="120" stroke="#c98a2c" stroke-width="0.5" stroke-dasharray="4,3"/>
+
+        <text x="370" y="140" text-anchor="middle" fill="#6b3a10" font-size="12" font-family="sans-serif" font-weight="600">返事待ちの半集中状態</text>
+        <text x="370" y="157" text-anchor="middle" fill="#8a5020" font-size="10.5" font-family="sans-serif">気になりが頭に残り続ける</text>
+        <line x1="290" y1="168" x2="450" y2="168" stroke="#c98a2c" stroke-width="0.5" stroke-dasharray="4,3"/>
+
+        <text x="370" y="188" text-anchor="middle" fill="#6b3a10" font-size="12" font-family="sans-serif" font-weight="600">情報の散在</text>
+        <text x="370" y="205" text-anchor="middle" fill="#8a5020" font-size="10.5" font-family="sans-serif">どこにあるか分からない</text>
+        <line x1="290" y1="216" x2="450" y2="216" stroke="#c98a2c" stroke-width="0.5" stroke-dasharray="4,3"/>
+
+        <text x="370" y="236" text-anchor="middle" fill="#6b3a10" font-size="12" font-family="sans-serif" font-weight="600">組織の将来不安</text>
+        <text x="370" y="253" text-anchor="middle" fill="#8a5020" font-size="10.5" font-family="sans-serif">「なぜここにいるか」が曖昧</text>
+
+        <!-- OUTCOME -->
+        <rect x="532" y="28" width="200" height="240" rx="14" fill="#edf1f8" stroke="#1a2f50" stroke-width="1.5"/>
+        <rect x="532" y="28" width="200" height="40" rx="14" fill="#1a2f50"/>
+        <rect x="532" y="55" width="200" height="13" fill="#1a2f50"/>
+        <text x="632" y="52" text-anchor="middle" fill="white" font-size="13" font-weight="700" font-family="sans-serif">アウトカム</text>
+
+        <text x="632" y="92" text-anchor="middle" fill="#1a2f50" font-size="12" font-family="sans-serif" font-weight="600">深い集中 → 技術的挑戦</text>
+        <text x="632" y="109" text-anchor="middle" fill="#2a4060" font-size="10.5" font-family="sans-serif">臆さず難しい実装に挑める</text>
+        <line x1="552" y1="120" x2="712" y2="120" stroke="#1a2f50" stroke-width="0.5" stroke-dasharray="4,3"/>
+
+        <text x="632" y="140" text-anchor="middle" fill="#1a2f50" font-size="12" font-family="sans-serif" font-weight="600">「待ち」からの解放</text>
+        <text x="632" y="157" text-anchor="middle" fill="#2a4060" font-size="10.5" font-family="sans-serif">自分のペースで仕事を完結</text>
+        <line x1="552" y1="168" x2="712" y2="168" stroke="#1a2f50" stroke-width="0.5" stroke-dasharray="4,3"/>
+
+        <text x="632" y="188" text-anchor="middle" fill="#1a2f50" font-size="12" font-family="sans-serif" font-weight="600">充実した積み重ね</text>
+        <text x="632" y="205" text-anchor="middle" fill="#2a4060" font-size="10.5" font-family="sans-serif">振り返ったとき「良かった」と</text>
+        <line x1="552" y1="216" x2="712" y2="216" stroke="#1a2f50" stroke-width="0.5" stroke-dasharray="4,3"/>
+
+        <text x="632" y="236" text-anchor="middle" fill="#1a2f50" font-size="12" font-family="sans-serif" font-weight="600">「なぜここにいるか」の答え</text>
+        <text x="632" y="253" text-anchor="middle" fill="#2a4060" font-size="10.5" font-family="sans-serif">組織との関係を意味づける</text>
+
+        <!-- Arrow: Motivation → Barrier -->
+        <line x1="209" y1="148" x2="263" y2="148" stroke="#2c7a6e" stroke-width="2" marker-end="url(#arr-teal)"/>
+        <text x="236" y="140" text-anchor="middle" fill="#2c7a6e" font-size="10" font-family="sans-serif">求める</text>
+
+        <!-- Arrow: Barrier → Outcome -->
+        <line x1="471" y1="148" x2="525" y2="148" stroke="#c98a2c" stroke-width="2" marker-end="url(#arr-amber)"/>
+        <text x="498" y="140" text-anchor="middle" fill="#c98a2c" font-size="10" font-family="sans-serif">阻む</text>
+      </svg>
+
+      <p class="diagram-caption">障害が解消されることで、モチベーションが満たされアウトカムが得られると想定される</p>
+    </div>
+  </section>
+
+  <!-- Confidence & Verification -->
+  <section class="section">
+    <div class="section-meta">
+      <span class="section-en">Confidence &amp; Verification</span>
+      <span class="section-ja">確信度・検証ポイント</span>
+    </div>
+
+    <div class="confidence-card">
+      <div class="confidence-label">CONFIDENCE LEVEL</div>
+      <div class="confidence-stars">★★★☆☆</div>
+      <p class="confidence-note">5 観点の回答に大きな矛盾はなく、「自律性の侵害 vs 自律性の確保」という一貫した軸が全体を通じている。ただし、すべての回答はプロダクト設計者が想定したものであり、実際のユーザーへのインタビューを経ていない。「組織不安の深度」「軽い同期への具体的な受容条件」については特に検証が必要。</p>
+    </div>
+
+    <ul class="verification-list">
+      <li>
+        <strong>「カジュアルな同期」の定義</strong>
+        「観てもらう／観に行く」が受け入れられると回答したが、具体的にどんな形式・時間・頻度なら実際に参加するか。「カジュアル」の解釈は個人差が大きく、プロダクト設計の核心に関わる。
+      </li>
+      <li>
+        <strong>組織不安の深度</strong>
+        「会社の将来が不安」が単なる不満レベルなのか、転職を具体的に検討しているのか。リテンション効果を設計要件に入れるかどうかを左右する。
+      </li>
+      <li>
+        <strong>定時志向 vs 技術どっぷり の優先度</strong>
+        「やりたい技術にどっぷり浸かれる」（ざっくり Q7）と「定時で終わらせたい」（モチベーション Q4）の実際の優先度。業務外でも技術投資をするタイプか否か。
+      </li>
+      <li>
+        <strong>Slack 送受信の非対称性</strong>
+        自分が投げる（送信）は普通にするが、受け取る（割り込み）が最大の障害というパターン。ターゲット層で同様のパターンが再現するか確認が必要。これはプロダクトの通知設計の根幹になる。
+      </li>
+      <li>
+        <strong>チームへの広がりが必要条件か</strong>
+        「チームや他のメンバーも使うことで価値を感じる」（アウトカム Q7）と回答したが、翔太さん一人だけが使うプロダクトでは採用しないのか、「広がれば最高」程度のニュアンスか。導入戦略を左右する。
+      </li>
+    </ul>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <p>このプロフィールは「ペルソナ仮説」です。インタビュー等で検証することを前提としています。</p>
+  <p>Generated by persona skill &nbsp;·&nbsp; 2026-06-25</p>
+</footer>
+
+</body>
+</html>

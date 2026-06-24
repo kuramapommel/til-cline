@@ -3,10 +3,38 @@
   "product_summary": "開発チーム間のコミュニケーション摩擦の解消／管理職の負担軽減を目的としたプロダクト。チームメンバーがチャット等の非同期コラボに偏りがちな現状を、モブワークなどの同期的コミュニケーションの有効性に気づかせることをねらう。",
   "primary_persona_target": "team-member-developer",
   "understanding_level": "B",
-  "current_step": "deepdive",
-  "current_aspect": "motivation",
+  "current_step": "complete",
+  "current_aspect": null,
   "current_question_count": 0,
-  "answered_aspects": ["rough-overview", "who", "context"],
+  "answered_aspects": ["rough-overview", "who", "context", "motivation", "barrier", "outcome"],
+  "outcome_answers": {
+    "Q1_day_change": "A. 深く集中できる時間が増えて、技術的にチャレンジングな実装にも臆さず挑めるようになる",
+    "Q2_fulfillment": "A. 自分のペースで進められる仕事の流れが確立されていて、誰にも余計に邪魔されない状態",
+    "Q3_half_year": "B. 「誰かを待つ」ことがなくなり、自分のスケジュールで仕事を完結できるようになった",
+    "Q4_job_worth": "C. キャリアの節目に振り返ったとき、「あの時期は充実していた」と思えるような積み重ねがある",
+    "Q5_org_anxiety_resolved": "A. 自分がここで働き続けることへの納得感・理由が持てている",
+    "Q6_life_outside": "A. 夜や週末を好きなことに集中できる（ゲーム・映画・読書を心おきなく楽しめる）",
+    "Q7_must_have_condition": "B. チームや他のメンバーも使うようになり、コミュニケーションの質がチーム全体で上がったとき"
+  },
+  "barrier_answers": {
+    "Q1_focus_breaker": "A. 急な Slack メッセージ・メンション",
+    "Q2_waiting_state": "A. 別タスクに切り替えるが、頭のどこかで「返事来たかな」と気になって作業が中断する",
+    "Q3_cross_team_pain": "C. 向こうのペースに引きずられて、自分の作業計画が崩れる",
+    "Q4_tool_problem": "A. 情報がどこにあるか分からない（Slack・Notion・GitHub・Jira が散らばっている）",
+    "Q5_mob_worst_moment": "A. 自分には関係ないトピックが多く、聞いているだけで終わった",
+    "Q6_future_anxiety": "B. 今のチームや会社にずっといてよいのか（会社や組織の将来が不安）",
+    "Q7_team_vs_individual": "A. チームや組織の構造的な問題（コミュニケーションの仕組みがない）の方が大きい",
+    "Q8_tolerance": "B. 改善できるなら改善したいが、自分一人では動けない（組織の問題）"
+  },
+  "motivation_answers": {
+    "Q1_success_moment": "B. PR がスムーズにマージされ、難しい実装も含めて気持ちよく終わった",
+    "Q2_concentration_reward": "C. 周囲に邪魔されず、自分のペースで決められる感覚（自律性が報酬）",
+    "Q3_recognition": "B. 同僚から「翔太のおかげで助かった」と感謝される",
+    "Q4_lifestyle_detail": "A. 仕事はキッチリ定時で終わらせ、夜は自分の趣味・娯楽に時間を使えること",
+    "Q5_designer_pm": "A. デザイナーの意図がクリアで、迷いなく実装に入れたとき",
+    "Q6_ideal_env": "B. ツールが揃っていて、迷わず作業できる",
+    "Q7_mob_acceptance_condition": "C. 完全な合意を取る場ではなく、気軽に「観てもらう／観に行く」くらいのカジュアルな場"
+  },
   "rough_overview_answers": {
     "Q1_layer": "B. ミドル（4〜8 年目）",
     "Q2_org": "B. 中規模のプロダクト企業（10〜50 人）",
@@ -53,6 +81,8 @@
     "questions/001-rough-overview.md",
     "questions/002-who-deepdive.md",
     "questions/003-context-deepdive.md",
-    "questions/004-motivation-deepdive.md"
+    "questions/004-motivation-deepdive.md",
+    "questions/005-barrier-deepdive.md",
+    "questions/006-outcome-deepdive.md"
   ]
 }
