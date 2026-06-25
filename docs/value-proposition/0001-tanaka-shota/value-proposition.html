@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>バリュープロポジションキャンバス — 田中 翔太（仮）</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #f3f1ec;
+  --bg-card: #ffffff;
+  --ink: #2a2e3a;
+  --ink-muted: #6b7280;
+  --line: #d8d4ca;
+  --line-strong: #4b5160;
+  --maker: #1f5360;
+  --maker-soft: #e3eef0;
+  --maker-accent: #c98a2c;
+  --customer: #a04e34;
+  --customer-soft: #f5e6dc;
+  --customer-accent: #1f5360;
+}
+
+body {
+  font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', 'Yu Gothic', sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  line-height: 1.7;
+  font-size: 14px;
+  padding: 32px 20px 64px;
+}
+
+.doc-header {
+  max-width: 1280px; margin: 0 auto 24px;
+  display: flex; flex-wrap: wrap; align-items: baseline; gap: 16px;
+  padding-bottom: 16px; border-bottom: 1px solid var(--line);
+}
+.doc-title { font-size: 1.5rem; font-weight: 700; letter-spacing: 0.02em; }
+.doc-subtitle { font-size: 0.85rem; color: var(--ink-muted); }
+.persona-pill {
+  display: inline-block; padding: 4px 12px;
+  background: var(--maker-soft); color: var(--maker);
+  border-radius: 100px; font-size: 0.85rem; font-weight: 600; letter-spacing: 0.04em;
+}
+.hypothesis-badge {
+  margin-left: auto; padding: 4px 10px;
+  border: 1px solid var(--line); border-radius: 100px;
+  font-size: 0.7rem; color: var(--ink-muted); letter-spacing: 0.1em;
+}
+.catch { width: 100%; font-size: 1rem; color: var(--ink-muted); font-style: italic; }
+
+/* ========== Canvas: 2 カラム × 縦積み ========== */
+.canvas {
+  max-width: 1280px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  align-items: stretch;
+}
+@media (max-width: 900px) { .canvas { grid-template-columns: 1fr; } }
+
+.side {
+  padding: 18px;
+  border-radius: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.side-maker { background: linear-gradient(160deg, #f6f1e7 0%, #e7ddc7 100%); }
+.side-customer { background: linear-gradient(160deg, #f5e6dc 0%, #ecccb5 100%); }
+.side-head {
+  display: flex; justify-content: space-between; align-items: baseline;
+  padding-bottom: 8px; border-bottom: 1px dashed var(--line);
+}
+.side-maker .side-head h2 { font-size: 1.05rem; color: var(--maker); letter-spacing: 0.04em; }
+.side-customer .side-head h2 { font-size: 1.05rem; color: var(--customer); letter-spacing: 0.04em; }
+.side-head h2 .en {
+  margin-left: 8px; font-weight: 400; color: var(--ink-muted); font-size: 0.78rem;
+}
+
+.block {
+  background: var(--bg-card);
+  border-radius: 14px;
+  padding: 18px 20px;
+  position: relative;
+}
+.block-head { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+.block-icon { flex: 0 0 32px; height: 32px; display: grid; place-items: center; }
+.block-title { font-size: 1rem; font-weight: 700; letter-spacing: 0.02em; }
+.block-title .en {
+  display: block; font-size: 0.7rem; color: var(--ink-muted);
+  font-weight: 500; margin-top: 2px; letter-spacing: 0.08em;
+}
+
+.block-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+.block-list li {
+  position: relative; padding: 8px 10px 8px 26px;
+  border-radius: 8px; background: rgba(0,0,0,0.025);
+  font-size: 0.92rem; line-height: 1.55;
+}
+.block-list li::before {
+  content: ''; position: absolute; left: 10px; top: 14px;
+  width: 6px; height: 6px; border-radius: 50%;
+  background: currentColor; opacity: 0.5;
+}
+.block-list .note {
+  display: block; margin-top: 4px; font-size: 0.78rem;
+  color: var(--ink-muted); padding-left: 0;
+}
+.block-list .tag {
+  display: inline-block; font-size: 0.68rem;
+  padding: 1px 6px; margin-right: 6px;
+  border-radius: 100px;
+  letter-spacing: 0.05em;
+}
+.block-list .tag.maker { background: rgba(31,83,96,0.1); color: var(--maker); }
+.block-list .tag.pain { background: rgba(160,78,52,0.12); color: var(--customer); }
+.block-list .tag.gain { background: rgba(31,83,96,0.1); color: var(--customer-accent); }
+.block-list .tag.warn { background: rgba(201,138,44,0.15); color: var(--maker-accent); }
+
+.block-creators { border-left: 4px solid var(--maker); }
+.block-relievers { border-left: 4px solid var(--maker-accent); }
+.block-products { border-left: 4px solid var(--maker); }
+.block-jobs { border-left: 4px solid var(--customer); }
+.block-gains { border-left: 4px solid var(--customer-accent); }
+.block-pains { border-left: 4px solid var(--customer); }
+.block-creators .block-icon { color: var(--maker); }
+.block-relievers .block-icon { color: var(--maker-accent); }
+.block-products .block-icon { color: var(--maker); }
+.block-jobs .block-icon { color: var(--customer); }
+.block-gains .block-icon { color: var(--customer-accent); }
+.block-pains .block-icon { color: var(--customer); }
+
+.fit-arrow {
+  display: block; margin: 18px auto;
+  width: 280px; text-align: center;
+  color: var(--ink-muted); font-size: 0.78rem; letter-spacing: 0.1em;
+}
+
+.storyboard-section {
+  max-width: 1280px; margin: 48px auto 0;
+  background: var(--bg-card); border-radius: 14px;
+  padding: 24px 28px;
+}
+.storyboard-section h2 { font-size: 1.05rem; margin-bottom: 4px; }
+.storyboard-section .lead { font-size: 0.85rem; color: var(--ink-muted); margin-bottom: 20px; }
+.storyboard-canvas { width: 100%; overflow-x: auto; }
+
+.footer-section {
+  max-width: 1280px; margin: 48px auto 0;
+  display: grid; grid-template-columns: 0.7fr 1.3fr 1fr; gap: 16px;
+}
+@media (max-width: 900px) { .footer-section { grid-template-columns: 1fr; } }
+.footer-card {
+  background: var(--bg-card); border-radius: 14px;
+  padding: 18px 20px; border-top: 3px solid var(--line-strong);
+}
+.footer-card h3 { font-size: 0.9rem; margin-bottom: 10px; letter-spacing: 0.04em; }
+.footer-card .stars { font-size: 1.4rem; color: var(--maker-accent); letter-spacing: 0.1em; margin-bottom: 6px; }
+.footer-card .lead-line { font-size: 0.85rem; color: var(--ink-muted); line-height: 1.6; }
+.footer-card ul { list-style: none; display: flex; flex-direction: column; gap: 8px; font-size: 0.85rem; }
+.footer-card ul li { position: relative; padding-left: 14px; }
+.footer-card ul li::before { content: '◇'; position: absolute; left: 0; color: var(--maker); font-size: 0.7rem; top: 4px; }
+.footer-card ul li b { font-weight: 600; color: var(--ink); }
+.footer-card ul li .why { display: block; margin-top: 2px; color: var(--ink-muted); font-size: 0.8rem; }
+
+footer.colophon {
+  max-width: 1280px; margin: 32px auto 0;
+  font-size: 0.72rem; color: var(--ink-muted);
+  text-align: right; letter-spacing: 0.05em;
+}
+</style>
+</head>
+<body>
+
+<header class="doc-header">
+  <div>
+    <div class="doc-title">バリュープロポジションキャンバス</div>
+    <div class="doc-subtitle">Value Proposition Canvas — Problem-Solution Fit までの仮説</div>
+  </div>
+  <span class="persona-pill">田中 翔太（仮）— 28歳・FE エンジニア</span>
+  <span class="hypothesis-badge">HYPOTHESIS</span>
+  <p class="catch">「集中している側を弱者扱いしない場」を提供することで、自律的なタイミングで繋がれる日常を取り戻す価値提案仮説。</p>
+</header>
+
+<section class="canvas" aria-label="バリュープロポジションキャンバス本体">
+
+  <!-- ========== 提供者側（左カラム・縦積み） ========== -->
+  <div class="side side-maker">
+    <div class="side-head">
+      <h2>提供者側 <span class="en">Value Map</span></h2>
+      <span style="font-size: 0.75rem; color: var(--ink-muted);">どう価値を作るか</span>
+    </div>
+
+    <article class="block block-creators">
+      <header class="block-head">
+        <span class="block-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M6 18V10"/><path d="M11 18V6"/><path d="M16 18v-5"/><path d="M21 18V3"/></svg>
+        </span>
+        <h3 class="block-title">うれしさを生み出すもの<span class="en">Gain Creators</span></h3>
+      </header>
+      <ul class="block-list">
+        <li><span class="tag gain">G2·G7</span><b>GC-1. 「自律的なタイミングで繋がる」文化の浸透</b>
+          <span class="note">罪悪感なく "今は集中" を宣言でき、相手側もそれを尊重する規範。M1 直交マッチからの導出。</span>
+        </li>
+        <li><span class="tag gain">G2·G3</span><b>GC-2. 言葉にしない意図が伝わる安心感</b>
+          <span class="note">「あとで返したい」「緊急じゃない」「気配だけ伝えたい」を硬いラベル無しで相互伝達。M2 転用マッチ。</span>
+        </li>
+        <li><span class="tag gain">G8</span><b>GC-3. 集中文化を育てるコミュニティ／プラットフォーム</b>
+          <span class="note">プロダクト利用そのものが文化への参加となる。組織のコミュニティ運営力を活用。M3 転用マッチ（V2 以降の長期構想）。</span>
+        </li>
+        <li><span class="tag gain">G1·G4·G5</span><b>GC-4. 終了時ダイジェストによる完遂感</b>
+          <span class="note">集中時間の終わりに、本当に必要な情報・通知だけが整理されて届く。"取りに行かない" 状態が正常。M5 直交マッチ。</span>
+        </li>
+      </ul>
+    </article>
+
+    <article class="block block-relievers">
+      <header class="block-head">
+        <span class="block-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11.5a4.5 4.5 0 1 0 9 0 4.5 4.5 0 0 0 -9 0z"/><path d="M5 19.5a4.5 4.5 0 1 0 9 0 4.5 4.5 0 0 0 -9 0z"/><line x1="12" y1="14" x2="9.5" y2="16.5"/></svg>
+        </span>
+        <h3 class="block-title">悩みを和らげるもの<span class="en">Pain Relievers</span></h3>
+      </header>
+      <ul class="block-list">
+        <li><span class="tag pain">P1</span><b>PR-1. 送信側に「集中している相手を弱者扱いしない」規範を伝える UI</b>
+          <span class="note">P1 構造的原因「即時応答強要×送受信非対称」に直接作用。送信時に「相手は集中中、応答がないことに罪悪感は要らない」と気づかせる介入。組織のビジョン「コミュニケーションが苦手な人を弱者扱いしない場づくり」の直交転用。最も深いレイヤー。</span>
+        </li>
+        <li><span class="tag pain">P1·P3</span><b>PR-2. 気配を流す UX（言葉にしない意図の相互伝達）</b>
+          <span class="note">「いま集中」「あとで返す」「緊急じゃない」を硬いラベルではなく気配として送受信。組織の暗黙知（言葉にしない意図を UX に翻訳する力）の直接転用。</span>
+        </li>
+        <li><span class="tag pain">P2·P4</span><b>PR-3. 集中時間中は情報を "なくす" 設計＋終了時ダイジェスト</b>
+          <span class="note">P2 の根「通知の不確実性が認知資源を消費」を、不確実性そのものを取り除いて解消。情報統合の常識を逆転し「取りに行かないことが正しい」を実装。M5 直交。</span>
+        </li>
+        <li><span class="tag pain">P5</span><b>PR-4. テキスト主体・非同期主体の MTG モード（V2）</b>
+          <span class="note">既存プロト「声を出さない MTG」の再起動。書く方が深く考える内向型ユーザーが本当の課題を surface できる場。M4 直接マッチ（V2 統合）。</span>
+        </li>
+      </ul>
+    </article>
+
+    <article class="block block-products">
+      <header class="block-head">
+        <span class="block-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12v9H4v-9"/><path d="M2 7h20v5H2z"/><path d="M12 22V7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg>
+        </span>
+        <h3 class="block-title">製品・サービス<span class="en">Products and Services</span></h3>
+      </header>
+      <ul class="block-list">
+        <li><b>Quietude（仮称）</b>: SaaS + ブラウザ拡張 + Slack アプリ のハイブリッド
+          <span class="note">受信側体験（情報を "なくす"）／送信側規範形成（M1 の核）／チームへの自然な広がり、を 1 プロダクトで担う構成。</span>
+        </li>
+        <li>SaaS — 受信側のセッション管理・ダイジェスト生成・気配の蓄積</li>
+        <li>ブラウザ拡張 — Slack Web 上で送信側 UI に介入し「弱者扱いしない規範」を visualize</li>
+        <li>Slack アプリ — ステータス自動連動・気配の流通</li>
+        <li>料金: <b>フリーミアム</b>（個人無料、チーム機能のみ有料）
+          <span class="note">「個人の集中体験を起点にチームに広がる」M3 の長期視点と整合する設計</span>
+        </li>
+        <li>長期構想: 集中文化コミュニティ（V2 以降）／非同期 MTG モード（V2）</li>
+      </ul>
+    </article>
+  </div>
+
+  <!-- ========== 顧客側（右カラム・縦積み） ========== -->
+  <div class="side side-customer">
+    <div class="side-head">
+      <h2>顧客側 <span class="en">Customer Profile</span></h2>
+      <span style="font-size: 0.75rem; color: var(--ink-muted);">何が起きているか</span>
+    </div>
+
+    <article class="block block-jobs">
+      <header class="block-head">
+        <span class="block-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="4" cy="6" r="1.5"/><line x1="9" y1="6" x2="20" y2="6"/><circle cx="4" cy="12" r="1.5"/><line x1="9" y1="12" x2="20" y2="12"/><circle cx="4" cy="18" r="1.5"/><line x1="9" y1="18" x2="20" y2="18"/></svg>
+        </span>
+        <h3 class="block-title">顧客の用事<span class="en">Customer Jobs</span></h3>
+      </header>
+      <ul class="block-list">
+        <li><b>J1.</b> 細切れの時間でも集中して実装を進める <span class="tag">機能的</span></li>
+        <li><b>J2.</b> 他チームと毎日連携しつつ、自分の作業計画を守る <span class="tag">機能的</span></li>
+        <li><b>J3.</b> 自分のペースを保って働く <span class="tag">情緒的</span></li>
+        <li><b>J4.</b> 同僚から「助かった」と感謝される関係性を作る <span class="tag">社会的</span></li>
+        <li><b>J5.</b> 仕事を定時で終わらせて、夜は趣味に集中する <span class="tag">情緒的</span></li>
+      </ul>
+    </article>
+
+    <article class="block block-gains">
+      <header class="block-head">
+        <span class="block-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+        </span>
+        <h3 class="block-title">うれしさ<span class="en">Gains</span></h3>
+      </header>
+      <ul class="block-list">
+        <li><b>G1.</b> 完遂感（PR がスムーズにマージ、難しい実装も気持ちよく）</li>
+        <li><b>G2.</b> 自律性（自分のペースで決められる感覚）</li>
+        <li><b>G3.</b> 同僚からの直接的な感謝</li>
+        <li><b>G4.</b> 集中時間の確保による「挑戦できる」感覚</li>
+        <li><b>G5.</b> 待ちからの解放（自分のスケジュールで完結）</li>
+        <li><b>G6.</b> キャリアの充実した積み重ね <span class="tag warn">要検証</span></li>
+        <li><b>G7.</b> オフの完全な回復</li>
+        <li><b>G8.</b> チームへの広がり（想定外利得） <span class="tag">外部条件</span></li>
+      </ul>
+    </article>
+
+    <article class="block block-pains">
+      <header class="block-head">
+        <span class="block-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M16 16s-1.5-2-4-2-4 2-4 2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+        </span>
+        <h3 class="block-title">悩み<span class="en">Pains</span></h3>
+      </header>
+      <ul class="block-list">
+        <li><b>P1.</b> Slack の急な割り込みで集中が断ち切られる</li>
+        <li><b>P2.</b> 半集中状態で疲弊（「次が来るかも」が気になる）</li>
+        <li><b>P3.</b> 他チームのペースに引きずられて計画が侵食される</li>
+        <li><b>P4.</b> 情報が Slack/Notion/GitHub/Jira に散在し探す時間が発生</li>
+        <li><b>P5.</b> 表面的な MTG ばかりで本当の課題が見えない <span class="tag warn">部分カバー</span></li>
+        <li><b>P6.</b> 組織の将来不安・「ここに居続けるべきか」 <span class="tag warn">スコープ外</span></li>
+        <li><b>P7.</b> 個人では改善できないという無力感 <span class="tag warn">スコープ外</span></li>
+      </ul>
+    </article>
+  </div>
+</section>
+
+<div class="fit-arrow">— 提供者側  ↔  Fit  ↔  顧客側 —</div>
+
+<!-- ============ UX Storyboard ============ -->
+<section class="storyboard-section" aria-label="UX ストーリーボード">
+  <h2>UX ストーリーボード — Quietude を使った翔太さんの一日</h2>
+  <p class="lead">「集中している側を弱者扱いしない」体験を 4 シーンで表現します。</p>
+  <div class="storyboard-canvas">
+    <svg width="1100" height="280" viewBox="0 0 1100 280" xmlns="http://www.w3.org/2000/svg" font-family="'Hiragino Sans','Noto Sans JP',sans-serif">
+      <defs>
+        <style>
+          .panel { fill: #fbf8f1; stroke: #d8d4ca; stroke-width: 1.5; rx: 10; }
+          .desk { fill: #b8a786; }
+          .laptop { fill: #2a3142; }
+          .face { fill: #f5d6b3; stroke: #2a2e3a; stroke-width: 1.4; }
+          .body { fill: #2a3142; }
+          .eye { fill: #2a2e3a; }
+          .caption { fill: #2a2e3a; font-size: 12px; font-weight: 600; }
+          .subcap { fill: #6b7280; font-size: 10.5px; }
+          .alert { fill: #c84432; }
+          .alert-text { fill: white; font-size: 9px; font-weight: 700; }
+          .badge-bg { fill: #1f5360; }
+          .badge-text { fill: white; font-size: 8.5px; font-weight: 700; }
+          .panel-label { fill: #1f5360; font-size: 11px; font-weight: 700; letter-spacing: 0.05em; }
+          .sender-bubble { fill: #f0e4d0; stroke: #c98a2c; stroke-width: 1.2; }
+        </style>
+      </defs>
+
+      <!-- ① 朝、通知の波 -->
+      <g transform="translate(20,30)">
+        <rect class="panel" width="240" height="200" rx="10"/>
+        <text x="14" y="22" class="panel-label">① 朝</text>
+        <text x="120" y="180" text-anchor="middle" class="caption">通知の波で集中できない</text>
+        <text x="120" y="195" text-anchor="middle" class="subcap">P1·P2 が同時発生</text>
+        <rect x="40" y="135" width="160" height="14" class="desk"/>
+        <rect x="80" y="100" width="80" height="40" class="laptop"/>
+        <rect x="84" y="104" width="72" height="32" fill="#1f5360"/>
+        <g><circle cx="155" cy="80" r="11" class="alert"/><text x="155" y="83" text-anchor="middle" class="alert-text">3</text></g>
+        <g><circle cx="180" cy="65" r="9" class="alert"/><text x="180" y="68" text-anchor="middle" class="alert-text">!</text></g>
+        <g><circle cx="200" cy="95" r="8" class="alert"/><text x="200" y="98" text-anchor="middle" class="alert-text">@</text></g>
+        <circle cx="120" cy="60" r="22" class="face"/>
+        <circle cx="113" cy="58" r="1.6" class="eye"/>
+        <circle cx="127" cy="58" r="1.6" class="eye"/>
+        <path d="M112 70 Q120 64 128 70" stroke="#2a2e3a" stroke-width="1.5" fill="none"/>
+        <path d="M105 82 Q120 95 135 82 L138 100 Q120 108 102 100 Z" class="body"/>
+      </g>
+
+      <!-- ② Quietude 起動 → 送信側に "弱者扱いしない" 規範 -->
+      <g transform="translate(280,30)">
+        <rect class="panel" width="240" height="200" rx="10"/>
+        <text x="14" y="22" class="panel-label">② Quietude ON</text>
+        <text x="120" y="180" text-anchor="middle" class="caption">送信側に "気配" が伝わる</text>
+        <text x="120" y="195" text-anchor="middle" class="subcap">PR-1·PR-2 が発動</text>
+        <rect x="40" y="135" width="160" height="14" class="desk"/>
+        <rect x="80" y="100" width="80" height="40" class="laptop"/>
+        <rect x="84" y="104" width="72" height="32" fill="#2c7a6e"/>
+        <text x="120" y="120" text-anchor="middle" fill="white" font-size="9" font-weight="700">QUIET MODE</text>
+        <text x="120" y="132" text-anchor="middle" fill="#a8d4c8" font-size="6.5">情報を取りに行かない</text>
+        <!-- 送信側 Slack の吹き出し風バブル -->
+        <g>
+          <rect x="160" y="48" width="78" height="38" rx="6" class="sender-bubble"/>
+          <text x="199" y="61" text-anchor="middle" font-size="8" fill="#7a5b1c" font-weight="700">送信側に表示</text>
+          <text x="199" y="73" text-anchor="middle" font-size="7" fill="#2a2e3a">いま集中中です</text>
+          <text x="199" y="82" text-anchor="middle" font-size="6.5" fill="#6b7280">急ぎでなければ後で</text>
+        </g>
+        <!-- 受信側 face: 安堵 -->
+        <circle cx="120" cy="60" r="22" class="face"/>
+        <circle cx="113" cy="58" r="1.6" class="eye"/>
+        <circle cx="127" cy="58" r="1.6" class="eye"/>
+        <path d="M113 68 Q120 71 127 68" stroke="#2a2e3a" stroke-width="1.5" fill="none"/>
+        <path d="M105 82 Q120 95 135 82 L138 100 Q120 108 102 100 Z" class="body"/>
+      </g>
+
+      <!-- ③ 没頭、PR merged -->
+      <g transform="translate(540,30)">
+        <rect class="panel" width="240" height="200" rx="10"/>
+        <text x="14" y="22" class="panel-label">③ 集中、その後</text>
+        <text x="120" y="180" text-anchor="middle" class="caption">難しい実装も気持ちよく完遂</text>
+        <text x="120" y="195" text-anchor="middle" class="subcap">G1·G4 が立ち上がる</text>
+        <rect x="40" y="135" width="160" height="14" class="desk"/>
+        <rect x="80" y="100" width="80" height="40" class="laptop"/>
+        <rect x="84" y="104" width="72" height="32" fill="#101820"/>
+        <line x1="88" y1="112" x2="120" y2="112" stroke="#7ad7a3" stroke-width="1.4"/>
+        <line x1="88" y1="118" x2="138" y2="118" stroke="#a8c8d4" stroke-width="1.4"/>
+        <line x1="88" y1="124" x2="128" y2="124" stroke="#e0c690" stroke-width="1.4"/>
+        <line x1="88" y1="130" x2="148" y2="130" stroke="#7ad7a3" stroke-width="1.4"/>
+        <g><circle cx="180" cy="80" r="11" fill="#2c7a6e"/>
+          <path d="M175 80 l3 4 l6 -7" stroke="white" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        </g>
+        <text x="180" y="100" text-anchor="middle" class="subcap" font-size="8">PR merged</text>
+        <circle cx="120" cy="60" r="22" class="face"/>
+        <circle cx="113" cy="58" r="1.6" class="eye"/>
+        <circle cx="127" cy="58" r="1.6" class="eye"/>
+        <path d="M111 67 Q120 75 129 67" stroke="#2a2e3a" stroke-width="1.6" fill="none"/>
+        <path d="M105 82 Q120 95 135 82 L138 100 Q120 108 102 100 Z" class="body"/>
+      </g>
+
+      <!-- ④ 終了時ダイジェスト → 夜の趣味へ -->
+      <g transform="translate(800,30)">
+        <rect class="panel" width="240" height="200" rx="10"/>
+        <text x="14" y="22" class="panel-label">④ 終了時</text>
+        <text x="120" y="180" text-anchor="middle" class="caption">必要なものだけが届き、夜は趣味へ</text>
+        <text x="120" y="195" text-anchor="middle" class="subcap">PR-3·GC-4 ／ G7</text>
+        <rect x="160" y="40" width="60" height="60" fill="#1f3a5b" rx="4"/>
+        <circle cx="200" cy="58" r="9" fill="#f0e0a0"/>
+        <circle cx="195" cy="56" r="6" fill="#1f3a5b"/>
+        <rect x="40" y="135" width="160" height="14" class="desk"/>
+        <rect x="80" y="125" width="80" height="14" class="laptop"/>
+        <!-- ダイジェストバッジ -->
+        <g>
+          <rect x="38" y="78" width="100" height="22" rx="11" fill="#c98a2c"/>
+          <text x="88" y="92" text-anchor="middle" class="badge-text">本日のダイジェスト 7 件</text>
+        </g>
+        <circle cx="100" cy="60" r="22" class="face"/>
+        <circle cx="93" cy="58" r="1.6" class="eye"/>
+        <circle cx="107" cy="58" r="1.6" class="eye"/>
+        <path d="M91 67 Q100 73 109 67" stroke="#2a2e3a" stroke-width="1.6" fill="none"/>
+        <path d="M85 82 Q100 95 115 82 L118 100 Q100 108 82 100 Z" class="body"/>
+      </g>
+
+    </svg>
+  </div>
+</section>
+
+<!-- ============ Footer Section ============ -->
+<section class="footer-section" aria-label="確信度・検証ポイント・収益化仮説">
+
+  <article class="footer-card">
+    <h3>確信度</h3>
+    <div class="stars">★★★☆☆</div>
+    <p class="lead-line">顧客側 3 ブロックは入力済みのペルソナ仮説に基づいており確度は中〜高。提供者側はペルソナ非依存の棚卸しから surface した内容で、Synthesis のメカニズムは論理的に通っている。ただし市場検証は未実施。とくに直交マッチ M1（送信側規範形成）は思想として強いが、実証は要 PoC。</p>
+  </article>
+
+  <article class="footer-card">
+    <h3>検証ポイント</h3>
+    <ul>
+      <li><b>送信側規範の浸透が、実際に発信抑制に作用するか（M1 の核）</b>
+        <span class="why">差別化の核。「集中している人を弱者扱いしない」という規範が、一度の表示で送信側に内面化されるか、繰り返しの介入が必要かを PoC で確かめる。最優先。</span>
+      </li>
+      <li><b>「気配を流す UX（PR-2）」の表現粒度</b>
+        <span class="why">ラベル化と気配の境界。「いま集中」を硬く表すと FOCUS の二の舞、柔らかすぎると伝わらない。表現の言語化は要ユーザーテスト。</span>
+      </li>
+      <li><b>情報を "なくす"（PR-3）の心理的受容</b>
+        <span class="why">「届いていないかも」という不確実性が、別種の認知負荷を生まないか。終了時ダイジェストへの信頼が前提条件。</span>
+      </li>
+      <li><b>P5・P6・P7（組織課題）はカバー外。組織アプローチとの併用が必要かどうか</b>
+        <span class="why">PR-4（V2 非同期 MTG）が P5 に部分的に作用するが、P6・P7 は構造的に届かない領域。</span>
+      </li>
+      <li><b>G6（キャリア充実の積み重ね）に直接届く Gain Creator が無い</b>
+        <span class="why">間接効果（GC-4 の完遂感が積み重なる）に留まる可能性。直接の振り返り機能が必要かは要検証。</span>
+      </li>
+      <li><b>G8（チーム広がり）が必要条件か単なる嬉しさか</b>
+        <span class="why">必要条件なら導入戦略を「個人→チーム」から「チーム一括」に変える必要がある。</span>
+      </li>
+    </ul>
+  </article>
+
+  <article class="footer-card">
+    <h3>収益化の仮説（軽い案）</h3>
+    <ul>
+      <li><b>フリーミアム ＋ チームプラン</b>
+        <span class="why">個人無料、チーム機能（規範形成の組織展開・集中文化スコア・ダイジェスト共有）はシート単価 800〜1,500 円／月。M3 の思想と整合。</span>
+      </li>
+      <li><b>法人プラン（年契約）</b>
+        <span class="why">中規模以上のチーム向け。組織レベルの規範形成支援・SSO・管理機能込み。</span>
+      </li>
+      <li><b>コミュニティ会費 ＋ プロダクト無料（V2 以降）</b>
+        <span class="why">集中文化コミュニティの参加費が主収益、プロダクトは入口として無料。組織の長期ビジョンと整合。</span>
+      </li>
+      <li><b>思想の出版・講座化</b>
+        <span class="why">「集中している側を弱者扱いしない場」という思想を本・講座にして横展開。プロダクトのブランディングに寄与。</span>
+      </li>
+    </ul>
+  </article>
+
+</section>
+
+<footer class="colophon">
+  生成日: 2026-06-25 ／ これは「価値提案仮説」です。インタビュー・PoC で検証してください。
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>バリュープロポジションキャンバス — {{PERSONA_NAME}}</title>
+<!--
+  バリュープロポジションキャンバス スキャフォールド（プレースホルダ付き）
+
+  レイアウト方針:
+    - 2 カラム（左 = 提供者側 Value Map、右 = 顧客側 Customer Profile）
+    - 各カラム内の 3 ブロックは縦積み（横並びにしない。読みづらくなるため）
+    - 提供者側の縦並び順:  Gain Creators → Pain Relievers → Products and Services
+    - 顧客側の縦並び順:    Customer Jobs  → Gains          → Pains
+    - 対応タグ（P1 / P1·P2 / G2 等）でブロック間の対応関係を可視化
+
+  プレースホルダ:
+    {{PERSONA_NAME}}        — ペルソナ名（仮名でも可）
+    {{PERSONA_CATCH}}       — ペルソナを一言で表すコピー
+    {{GENERATED_AT}}        — 出力日（YYYY-MM-DD 等）
+
+  各ブロックの中身は、HTML コメント `<!-- {{BLOCK_NAME}} -->` で挟まれた領域に
+  <li> 要素で項目を流し込む（例: CUSTOMER_JOBS, PAINS, GAINS, PRODUCTS_AND_SERVICES,
+  PAIN_RELIEVERS, GAIN_CREATORS）。
+
+  ストーリーボード SVG は `<!-- {{STORYBOARD_SVG}} -->` 領域に SVG ごと差し込む。
+  確信度・検証・収益化セクションは `<!-- {{FOOTER_SECTION}} -->` 領域に差し込む。
+
+  Strategyzer 公式テンプレ画像・ロゴ・QR・タグラインは流用しない（IP 上の理由）。
+-->
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #f5f3ee;
+  --bg-card: #ffffff;
+  --ink: #2a2e3a;
+  --ink-muted: #6b7280;
+  --line: #d8d4ca;
+  --line-strong: #4b5160;
+  --maker: #2c5f6e;
+  --maker-soft: #e6f0f2;
+  --maker-accent: #c98a2c;
+  --customer: #b3573b;
+  --customer-soft: #f7ece5;
+  --customer-accent: #2c5f6e;
+}
+
+body {
+  font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', 'Yu Gothic', sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  line-height: 1.7;
+  font-size: 14px;
+  padding: 32px 20px 64px;
+}
+
+/* ========== Header ========== */
+.doc-header {
+  max-width: 1280px;
+  margin: 0 auto 24px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--line);
+}
+.doc-title { font-size: 1.5rem; font-weight: 700; letter-spacing: 0.02em; }
+.doc-subtitle { font-size: 0.85rem; color: var(--ink-muted); }
+.persona-pill {
+  display: inline-block; padding: 4px 12px;
+  background: var(--maker-soft); color: var(--maker);
+  border-radius: 100px; font-size: 0.85rem; font-weight: 600; letter-spacing: 0.04em;
+}
+.hypothesis-badge {
+  margin-left: auto; padding: 4px 10px;
+  border: 1px solid var(--line); border-radius: 100px;
+  font-size: 0.7rem; color: var(--ink-muted); letter-spacing: 0.1em;
+}
+.catch { width: 100%; font-size: 1rem; color: var(--ink-muted); font-style: italic; }
+
+/* ========== Canvas ========== */
+.canvas {
+  max-width: 1280px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  align-items: stretch;
+}
+@media (max-width: 900px) { .canvas { grid-template-columns: 1fr; } }
+
+.side {
+  padding: 18px;
+  border-radius: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.side-maker { background: linear-gradient(160deg, #f6f1e7 0%, #ece4d2 100%); }
+.side-customer { background: linear-gradient(160deg, #f7ece5 0%, #f0d9c8 100%); }
+
+.side-head {
+  display: flex; justify-content: space-between; align-items: baseline;
+  padding-bottom: 8px; border-bottom: 1px dashed var(--line);
+}
+.side-maker .side-head h2 { font-size: 1.05rem; color: var(--maker); letter-spacing: 0.04em; }
+.side-customer .side-head h2 { font-size: 1.05rem; color: var(--customer); letter-spacing: 0.04em; }
+.side-head h2 .en {
+  margin-left: 8px; font-weight: 400; color: var(--ink-muted); font-size: 0.78rem;
+}
+
+/* 共通カードスタイル */
+.block {
+  background: var(--bg-card);
+  border-radius: 14px;
+  padding: 18px 20px;
+  position: relative;
+}
+.block-head { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+.block-icon { flex: 0 0 32px; height: 32px; display: grid; place-items: center; }
+.block-title { font-size: 1rem; font-weight: 700; letter-spacing: 0.02em; }
+.block-title .en {
+  display: block; font-size: 0.7rem; color: var(--ink-muted);
+  font-weight: 500; margin-top: 2px; letter-spacing: 0.08em;
+}
+
+.block-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+.block-list li {
+  position: relative; padding: 8px 10px 8px 26px;
+  border-radius: 8px; background: rgba(0,0,0,0.025);
+  font-size: 0.92rem; line-height: 1.55;
+}
+.block-list li::before {
+  content: ''; position: absolute; left: 10px; top: 14px;
+  width: 6px; height: 6px; border-radius: 50%;
+  background: currentColor; opacity: 0.5;
+}
+.block-list .note {
+  display: block; margin-top: 4px; font-size: 0.78rem;
+  color: var(--ink-muted); padding-left: 0;
+}
+.block-list li.empty { opacity: 0.5; font-style: italic; }
+
+/* 対応タグ */
+.block-list .tag {
+  display: inline-block; font-size: 0.68rem;
+  padding: 1px 6px; margin-right: 6px;
+  border-radius: 100px;
+  letter-spacing: 0.05em;
+}
+.block-list .tag.maker { background: rgba(44,95,110,0.1); color: var(--maker); }
+.block-list .tag.pain { background: rgba(179,87,59,0.12); color: var(--customer); }
+.block-list .tag.gain { background: rgba(44,95,110,0.1); color: var(--customer-accent); }
+.block-list .tag.warn { background: rgba(201,138,44,0.15); color: var(--maker-accent); }
+
+/* ブロックごとの左ボーダー色 */
+.block-creators { border-left: 4px solid var(--maker); }
+.block-relievers { border-left: 4px solid var(--maker-accent); }
+.block-products { border-left: 4px solid var(--maker); }
+.block-jobs { border-left: 4px solid var(--customer); }
+.block-gains { border-left: 4px solid var(--customer-accent); }
+.block-pains { border-left: 4px solid var(--customer); }
+
+.block-creators .block-icon { color: var(--maker); }
+.block-relievers .block-icon { color: var(--maker-accent); }
+.block-products .block-icon { color: var(--maker); }
+.block-jobs .block-icon { color: var(--customer); }
+.block-gains .block-icon { color: var(--customer-accent); }
+.block-pains .block-icon { color: var(--customer); }
+
+/* ========== Fit visual cue ========== */
+.fit-arrow {
+  display: block; margin: 18px auto;
+  width: 240px; text-align: center;
+  color: var(--ink-muted); font-size: 0.78rem; letter-spacing: 0.1em;
+}
+
+/* ========== Storyboard ========== */
+.storyboard-section {
+  max-width: 1280px;
+  margin: 48px auto 0;
+  background: var(--bg-card);
+  border-radius: 14px;
+  padding: 24px 28px;
+}
+.storyboard-section h2 { font-size: 1.05rem; margin-bottom: 4px; }
+.storyboard-section .lead { font-size: 0.85rem; color: var(--ink-muted); margin-bottom: 20px; }
+.storyboard-canvas { width: 100%; overflow-x: auto; }
+
+/* ========== Footer ========== */
+.footer-section {
+  max-width: 1280px;
+  margin: 48px auto 0;
+  display: grid;
+  grid-template-columns: 0.7fr 1.3fr 1fr;
+  gap: 16px;
+}
+@media (max-width: 900px) { .footer-section { grid-template-columns: 1fr; } }
+.footer-card {
+  background: var(--bg-card);
+  border-radius: 14px;
+  padding: 18px 20px;
+  border-top: 3px solid var(--line-strong);
+}
+.footer-card h3 { font-size: 0.9rem; margin-bottom: 10px; letter-spacing: 0.04em; }
+.footer-card .stars { font-size: 1.4rem; color: var(--maker-accent); letter-spacing: 0.1em; margin-bottom: 6px; }
+.footer-card .lead-line { font-size: 0.85rem; color: var(--ink-muted); line-height: 1.6; }
+.footer-card ul { list-style: none; display: flex; flex-direction: column; gap: 8px; font-size: 0.85rem; }
+.footer-card ul li { position: relative; padding-left: 14px; }
+.footer-card ul li::before { content: '◇'; position: absolute; left: 0; color: var(--maker); font-size: 0.7rem; top: 4px; }
+.footer-card ul li b { font-weight: 600; color: var(--ink); }
+.footer-card ul li .why { display: block; margin-top: 2px; color: var(--ink-muted); font-size: 0.8rem; }
+
+footer.colophon {
+  max-width: 1280px;
+  margin: 32px auto 0;
+  font-size: 0.72rem;
+  color: var(--ink-muted);
+  text-align: right;
+  letter-spacing: 0.05em;
+}
+</style>
+</head>
+<body>
+
+<header class="doc-header">
+  <div>
+    <div class="doc-title">バリュープロポジションキャンバス</div>
+    <div class="doc-subtitle">Value Proposition Canvas — Problem-Solution Fit までの仮説</div>
+  </div>
+  <span class="persona-pill">{{PERSONA_NAME}}</span>
+  <span class="hypothesis-badge">HYPOTHESIS</span>
+  <p class="catch">{{PERSONA_CATCH}}</p>
+</header>
+
+<section class="canvas" aria-label="バリュープロポジションキャンバス本体">
+
+  <!-- ============ Maker Side（提供者側・縦積み） ============ -->
+  <div class="side side-maker" aria-label="提供者側 Value Map">
+    <div class="side-head">
+      <h2>提供者側 <span class="en">Value Map</span></h2>
+      <span style="font-size: 0.75rem; color: var(--ink-muted);">どう価値を作るか</span>
+    </div>
+
+    <article class="block block-creators" aria-label="うれしさを生み出すもの">
+      <header class="block-head">
+        <span class="block-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M6 18V10"/><path d="M11 18V6"/><path d="M16 18v-5"/><path d="M21 18V3"/></svg>
+        </span>
+        <h3 class="block-title">うれしさを生み出すもの<span class="en">Gain Creators</span></h3>
+      </header>
+      <ul class="block-list">
+        <!-- {{GAIN_CREATORS}} -->
+        <li class="empty">（ここに Gain を増幅する仕組みが入る）</li>
+        <!-- {{/GAIN_CREATORS}} -->
+      </ul>
+    </article>
+
+    <article class="block block-relievers" aria-label="悩みを和らげるもの">
+      <header class="block-head">
+        <span class="block-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11.5a4.5 4.5 0 1 0 9 0 4.5 4.5 0 0 0 -9 0z"/><path d="M5 19.5a4.5 4.5 0 1 0 9 0 4.5 4.5 0 0 0 -9 0z"/><line x1="12" y1="14" x2="9.5" y2="16.5"/></svg>
+        </span>
+        <h3 class="block-title">悩みを和らげるもの<span class="en">Pain Relievers</span></h3>
+      </header>
+      <ul class="block-list">
+        <!-- {{PAIN_RELIEVERS}} -->
+        <li class="empty">（ここに Pain を和らげる仕組みが入る）</li>
+        <!-- {{/PAIN_RELIEVERS}} -->
+      </ul>
+    </article>
+
+    <article class="block block-products" aria-label="製品・サービス">
+      <header class="block-head">
+        <span class="block-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12v9H4v-9"/><path d="M2 7h20v5H2z"/><path d="M12 22V7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg>
+        </span>
+        <h3 class="block-title">製品・サービス<span class="en">Products and Services</span></h3>
+      </header>
+      <ul class="block-list">
+        <!-- {{PRODUCTS_AND_SERVICES}} -->
+        <li class="empty">（ここに具体的な製品・サービスの項目が入る）</li>
+        <!-- {{/PRODUCTS_AND_SERVICES}} -->
+      </ul>
+    </article>
+  </div>
+
+  <!-- ============ Customer Side（顧客側・縦積み） ============ -->
+  <div class="side side-customer" aria-label="顧客側 Customer Profile">
+    <div class="side-head">
+      <h2>顧客側 <span class="en">Customer Profile</span></h2>
+      <span style="font-size: 0.75rem; color: var(--ink-muted);">何が起きているか</span>
+    </div>
+
+    <article class="block block-jobs" aria-label="顧客の用事">
+      <header class="block-head">
+        <span class="block-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="4" cy="6" r="1.5"/><line x1="9" y1="6" x2="20" y2="6"/><circle cx="4" cy="12" r="1.5"/><line x1="9" y1="12" x2="20" y2="12"/><circle cx="4" cy="18" r="1.5"/><line x1="9" y1="18" x2="20" y2="18"/></svg>
+        </span>
+        <h3 class="block-title">顧客の用事<span class="en">Customer Jobs</span></h3>
+      </header>
+      <ul class="block-list">
+        <!-- {{CUSTOMER_JOBS}} -->
+        <li class="empty">（ここに顧客が片付けたい用事が入る）</li>
+        <!-- {{/CUSTOMER_JOBS}} -->
+      </ul>
+    </article>
+
+    <article class="block block-gains" aria-label="うれしさ">
+      <header class="block-head">
+        <span class="block-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+        </span>
+        <h3 class="block-title">うれしさ<span class="en">Gains</span></h3>
+      </header>
+      <ul class="block-list">
+        <!-- {{GAINS}} -->
+        <li class="empty">（ここに顧客が得たい嬉しさが入る）</li>
+        <!-- {{/GAINS}} -->
+      </ul>
+    </article>
+
+    <article class="block block-pains" aria-label="悩み">
+      <header class="block-head">
+        <span class="block-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M16 16s-1.5-2-4-2-4 2-4 2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+        </span>
+        <h3 class="block-title">悩み<span class="en">Pains</span></h3>
+      </header>
+      <ul class="block-list">
+        <!-- {{PAINS}} -->
+        <li class="empty">（ここに顧客の悩み・障害が入る）</li>
+        <!-- {{/PAINS}} -->
+      </ul>
+    </article>
+  </div>
+</section>
+
+<div class="fit-arrow">— 提供者側  ↔  Fit  ↔  顧客側 —</div>
+
+<!-- ============ UX Storyboard ============ -->
+<section class="storyboard-section" aria-label="UX ストーリーボード">
+  <h2>UX ストーリーボード</h2>
+  <p class="lead">提案する製品・サービスを使ったときの理想体験を、シーンで表現します。</p>
+  <div class="storyboard-canvas">
+    <!-- {{STORYBOARD_SVG}} -->
+    <svg width="1000" height="220" viewBox="0 0 1000 220" xmlns="http://www.w3.org/2000/svg">
+      <text x="500" y="110" text-anchor="middle" fill="#999" font-size="14">
+        （ここにストーリーボード SVG が描画される）
+      </text>
+    </svg>
+    <!-- {{/STORYBOARD_SVG}} -->
+  </div>
+</section>
+
+<!-- ============ Footer Section ============ -->
+<section class="footer-section" aria-label="確信度・検証ポイント・収益化仮説">
+  <!-- {{FOOTER_SECTION}} -->
+  <article class="footer-card">
+    <h3>確信度</h3>
+    <div class="stars">★★★☆☆</div>
+    <p class="lead-line">（ここに確信度の根拠を 1〜2 行で書く）</p>
+  </article>
+  <article class="footer-card">
+    <h3>検証ポイント</h3>
+    <ul>
+      <li>（インタビューや PoC で確かめるべき不確実な点を書く）</li>
+    </ul>
+  </article>
+  <article class="footer-card">
+    <h3>収益化の仮説（軽い案）</h3>
+    <ul>
+      <li>（収益化の推測案を 2〜4 案、各 1〜2 行で書く）</li>
+    </ul>
+  </article>
+  <!-- {{/FOOTER_SECTION}} -->
+</section>
+
+<footer class="colophon">
+  生成日: {{GENERATED_AT}} ／ これは仮説です。インタビュー・PoC で検証してください。
+</footer>
+
+</body>
+</html>
