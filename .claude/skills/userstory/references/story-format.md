@@ -40,7 +40,7 @@
 
 | 要素 | 生成元 | 例 |
 |------|--------|------|
-| ID | `scripts/generate_id.js` の出力（URL-safe 10 文字） | `V1StGXR8a9` |
+| ID | `scripts/generate-id.js` の出力（URL-safe 10 文字） | `V1StGXR8a9` |
 | epic-slug | 確定した Epic 名を英訳し **kebab-case** 化 | `training-list` |
 | story-title-slug | ストーリー本文の要点を英訳し **kebab-case** 化 | `view-training-programs` |
 
@@ -92,7 +92,7 @@ Xy7Zw2RtB4_training-list_navigate-to-program-detail.md
 
 ## 4. ID 生成
 
-- `node scripts/generate_id.js` を実行して 1 個の ID（10 文字）を取得する。
+- `node scripts/generate-id.js` を実行して 1 個の ID（10 文字）を取得する。
 - 生成器は Node.js 標準の `crypto.randomBytes` を使い、外部 npm 依存はゼロ。
 - URL-safe な文字集合（`0-9A-Za-z`、記号なし）を採用しているため、ファイル名・URL・ID として安全に使える。
 - 生成された ID は URL・パス・ファイル名で追加のエスケープを必要としない。

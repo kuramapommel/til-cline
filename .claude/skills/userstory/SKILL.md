@@ -57,7 +57,7 @@ Step 8  Markdown ファイル出力（docs/userstory/ に書き込み）
 - `references/workflow.md` — Step 1〜8 の詳細手順、絞り込みループ、再抽出耐性、停止条件
 - `references/story-format.md` — ストーリー書式（〈ロール〉として〈操作/機能〉ができる、〈目的〉のため）、ファイル命名規則、日本語安全化ルール
 - `references/question-guide.md` — Step 6 の質問シート作成観点集（ロール具体性・目的の明確さ・境界ケース・既存機能との境界）
-- `scripts/generate_id.js` — ID 生成スクリプト。**Node.js 標準 `crypto` のみを使用し外部依存ゼロ**（v14 以上を前提）。`node scripts/generate_id.js` で URL-safe 10 文字を出力
+- `scripts/generate-id.js` — ID 生成スクリプト。**Node.js 標準 `crypto` のみを使用し外部依存ゼロ**（v14 以上を前提）。`node scripts/generate-id.js` で URL-safe 10 文字を出力
 - `assets/story-template.md` — 出力 Markdown の雛形（frontmatter + セクション骨格）。Step 8 でこれを起点に生成する
 
 ## 出力先とファイル命名
