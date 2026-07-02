@@ -123,4 +123,51 @@ Xy7Zw2RtB4_training-list_navigate-to-program-detail.md
 - タグは日本語で問題ない（frontmatter は YAML なのでカンマ区切りリスト構文 `[a, b, c]` で書く）。
 
 ### status の位置付け
-`NEW → DRAFT → READY → WIP → DONE → RELEASED / CLOSE` というライフサイクルにおける DRAFT フェーズを表す。受け入れ基準等が空欄で構わないのはこの段階だからで、後続のリファインメントで `READY` に昇格させることを想定している。
+`NEW → DRAFT → READY → WIP → DONE → RELEASED / CLOSE` というライフサイクルにおける DRAFT フェーズを表す。**受け入れ基準**が空欄で構わないのはこの段階だからで、後続のリファインメントで `READY` に昇格させることを想定している。ただし **UI 情報・詳細仕様など「入力から読み取れる情報」は空欄にせず記載する**（下記 6・7 を参照）。
+
+---
+
+## 6. 本文セクションの埋め方（何を書き、何を空欄に残すか）
+
+出力 Markdown（`assets/story-template.md`）のセクションは、**「入力から読み取れる情報は書く／後続で決めるべき情報だけ空欄に残す」**という方針で埋める。`未定義（必要に応じて記載）` で機械的に済ませない。
+
+| セクション | 方針 |
+|-----------|------|
+| 概要 (Abstract) | ストーリー本文をそのまま記載（必須） |
+| UI / 画面情報 (UI Notes) | 入力から読み取れたレイアウト・カラーパレット・コンポーネントを記載。文章化できない分は画像を配置して参照（`references/ui-extraction.md`）。読み取れなければ行ごと削除してよい |
+| 受け入れ基準 (Acceptance Criteria) | **DRAFT では空欄のまま**（`- [ ] 未定義（リファインメント時に記載）`）。ここは後続リファインメントの担当 |
+| 詳細仕様 (Specific Details) | 入力から読み取れる仕様（バリデーション・初期値・遷移先・表示条件・文言・制約等）を記載。**読み取れない項目だけ**「未定義（リファインメント時に記載）」とする |
+| 補足 / 決定記録 (Notes / ADR) | 参照した入力データ・受領した追加仕様・判断根拠を残す |
+
+**創作しない**という原則は維持する。読み取れない情報を埋めるために推測で書かない。曖昧なものは「〜と思われる」と明示するか、Step 6 の質問シートに回す。
+
+---
+
+## 7. 画像ディレクトリの命名（UI 情報の画像フォールバック）
+
+UI 情報を文章化しきれない場合、参照した画像を**ストーリー Markdown のそばの同名ディレクトリ**に置いて参照する。
+
+### 形式
+
+```
+docs/userstory/<story-file-basename>/<image-file-name>
+```
+
+- `<story-file-basename>`: ストーリー Markdown のファイル名から `.md` を除いたもの（＝ `[ID]_[epic-slug]_[story-title-slug]`）。
+- `<image-file-name>`: 元画像のファイル名。空白や禁止文字 `/ \ : * ? " < > |` は `-` に置換。
+
+### 例
+
+```
+docs/userstory/V1StGXR8a9_training-list_view-training-programs.md
+docs/userstory/V1StGXR8a9_training-list_view-training-programs/
+└── screen.png
+```
+
+ストーリー本文からは相対パスで参照する:
+
+```markdown
+- 参照画像: ![研修一覧画面](./V1StGXR8a9_training-list_view-training-programs/screen.png)
+```
+
+配置手段・複数ストーリーで共有する場合の扱いは `references/ui-extraction.md` の「画像フォールバック」を参照。
