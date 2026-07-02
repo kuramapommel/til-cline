@@ -188,6 +188,7 @@ body {
 .storyboard-section h2 { font-size: 1.05rem; margin-bottom: 4px; }
 .storyboard-section .lead { font-size: 0.85rem; color: var(--ink-muted); margin-bottom: 20px; }
 .storyboard-canvas { width: 100%; overflow-x: auto; }
+.storyboard-canvas svg { display: block; max-width: 100%; height: auto; }
 
 /* ========== Footer ========== */
 .footer-section {
@@ -346,9 +347,21 @@ footer.colophon {
   <p class="lead">提案する製品・サービスを使ったときの理想体験を、シーンで表現します。</p>
   <div class="storyboard-canvas">
     <!-- {{STORYBOARD_SVG}} -->
-    <svg width="1000" height="220" viewBox="0 0 1000 220" xmlns="http://www.w3.org/2000/svg">
-      <text x="500" y="110" text-anchor="middle" fill="#999" font-size="14">
-        （ここにストーリーボード SVG が描画される）
+    <!--
+      ストーリーボード SVG は references/storyboard-guide.md のグリッド仕様に従って描くこと。
+      - 4 コマの場合: viewBox="0 0 1200 300"、コマサイズ 260×240、gutter 20、左右余白 20
+      - viewBox / width / height を必ず一致させる
+      - preserveAspectRatio="xMidYMid meet" を必須指定
+      - 各コマ内テキストは安全領域（枠内側 10px）に収める
+      - 出力前にレイアウト精度チェックリストを走らせる
+    -->
+    <svg width="1200" height="300" viewBox="0 0 1200 300"
+         xmlns="http://www.w3.org/2000/svg"
+         preserveAspectRatio="xMidYMid meet"
+         font-family="'Hiragino Sans','Noto Sans JP',sans-serif">
+      <rect width="1200" height="300" fill="#faf8f3"/>
+      <text x="600" y="150" text-anchor="middle" fill="#999" font-size="14">
+        （ここにストーリーボード SVG が描画される。テンプレは storyboard-guide.md を参照）
       </text>
     </svg>
     <!-- {{/STORYBOARD_SVG}} -->
